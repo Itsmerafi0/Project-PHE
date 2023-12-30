@@ -10,7 +10,7 @@ namespace Project_PHE.Controllers
 {
     [ApiController]
     [Route("vendors")]
-    [Authorize("admin")]
+    [Authorize(Roles = "admin")]
     public class VendorController : ControllerBase
     {
         private readonly VendorServices _vendorServices;
@@ -89,7 +89,42 @@ namespace Project_PHE.Controllers
                 });
             }
         }
-    
+
+        [HttpGet("approve-vendor")]
+        [Authorize(Roles = "manager")]
+        public IActionResult GetManager()
+        {
+            try
+            {
+                var entities = _vendorServices.GetApproveVendors();
+
+                if (!entities.Any())
+                    return NotFound(new ResponseHandler<GetVendorWithEmployeeDto>
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Status = HttpStatusCode.NotFound.ToString(),
+                        Message = "Data not found"
+                    });
+                return Ok(new ResponseHandler<IEnumerable<GetVendorWithEmployeeDto>>
+                {
+                    Code = StatusCodes.Status200OK,
+                    Status = HttpStatusCode.OK.ToString(),
+                    Message = "Data found",
+                    Data = entities
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseExceptionHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = ex.Message
+                });
+            }
+        }
+
 
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(string guid)

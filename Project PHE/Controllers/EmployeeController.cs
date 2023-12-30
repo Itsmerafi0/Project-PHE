@@ -167,11 +167,11 @@ namespace Project_PHE.Controllers
             }
 
             var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, employee.Guid.ToString()),
-                new(ClaimTypes.Name, $"{employee.Firstname}{employee.Lastname}"),
-                new(ClaimTypes.Email, employee.Email),
-            };
+    {
+        new(ClaimTypes.NameIdentifier, employee.Guid.ToString()),
+        new(ClaimTypes.Name, $"{employee.Firstname} {employee.Lastname}"),
+        new(ClaimTypes.Email, employee.Email),
+    };
 
             var roles = _employeeServices.GetRoles(employee.Guid);
             foreach (var role in roles)
@@ -181,7 +181,6 @@ namespace Project_PHE.Controllers
 
             var token = _tokenService.GenerateToken(claims);
 
-
             return Ok(new ResponseVM<string>
             {
                 Code = StatusCodes.Status200OK,
@@ -189,8 +188,8 @@ namespace Project_PHE.Controllers
                 Message = "Login Success",
                 Data = token
             });
-
         }
+
 
     }
 }

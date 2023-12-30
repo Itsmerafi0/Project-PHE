@@ -137,11 +137,12 @@ namespace Project_PHE.Services
 
             var employeeRoles = from role in _dbContext.Roles
                                 join emp in _dbContext.Employees on role.Guid equals emp.RoleEmployee
-                                where emp.RoleEmployee == guid
+                                where emp.Guid == guid 
                                 select role.Name;
 
             return employeeRoles.ToList();
         }
+
 
 
         public Employee GetEmail(string email)
