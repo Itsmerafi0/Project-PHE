@@ -11,7 +11,7 @@ namespace Project_PHE.Controllers
 {
     [Route("role")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles ="admin")]
     public class RoleController : ControllerBase
     {
         private readonly RoleServices _services;

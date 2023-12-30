@@ -10,7 +10,7 @@ namespace Project_PHE.Controllers
 {
     [ApiController]
     [Route("vendors")]
-    [Authorize(Roles = "admin,manager")]
+    [Authorize("admin")]
     public class VendorController : ControllerBase
     {
         private readonly VendorServices _vendorServices;
@@ -55,6 +55,42 @@ namespace Project_PHE.Controllers
             }
         }
 
+        [HttpGet("proccess-vendor")]
+        [Authorize(Roles ="admin")]
+        public IActionResult GetAdmin()
+        {
+            try
+            {
+                var entities = _vendorServices.GetProcessVendors();
+
+                if (!entities.Any())
+                    return NotFound(new ResponseHandler<GetVendorWithEmployeeDto>
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Status = HttpStatusCode.NotFound.ToString(),
+                        Message = "Data not found"
+                    });
+                return Ok(new ResponseHandler<IEnumerable<GetVendorWithEmployeeDto>>
+                {
+                    Code = StatusCodes.Status200OK,
+                    Status = HttpStatusCode.OK.ToString(),
+                    Message = "Data found",
+                    Data = entities
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseExceptionHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = ex.Message
+                });
+            }
+        }
+    
+
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(string guid)
         {
@@ -90,7 +126,7 @@ namespace Project_PHE.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "user")]
+        [Authorize(Roles ="user")]
         public IActionResult Create([FromBody] VendorDto vendorDto)
         {
             try
@@ -192,6 +228,7 @@ namespace Project_PHE.Controllers
         }
 
         [HttpPut("proccess")]
+        [Authorize(Roles ="admin")]
         public IActionResult VendorAccept(string guid)
         {
             try
@@ -249,6 +286,7 @@ namespace Project_PHE.Controllers
         }
 
         [HttpPut("approved")]
+        [Authorize(Roles ="manager")]
         public IActionResult VendorApprove(string guid)
         {
             try
@@ -329,6 +367,7 @@ namespace Project_PHE.Controllers
 
 
         [HttpPut("decline")]
+        [Authorize(Roles ="admin,manager")]
         public async Task<IActionResult> VendorDecline(string guid)
         {
             try

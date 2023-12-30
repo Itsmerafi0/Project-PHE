@@ -69,6 +69,14 @@ namespace Project_PHE.Data
                 .HasMaxLength(255)
                 .HasColumnName("email");
 
+                entity.Property(e => e.Password)
+                .HasMaxLength (255)
+                .HasColumnName("password");
+
+                entity.Property(e => e.RoleEmployee)
+                .HasMaxLength(36)
+                .HasColumnName("role_empolyee");
+
                 entity.HasMany(d => d.RoleEmployes)
                    .WithMany(p => p.EmployeeRoles);
 
@@ -106,6 +114,10 @@ namespace Project_PHE.Data
                 entity.Property(e => e.IsApproved)
                 .HasMaxLength(255)
                 .HasColumnName("is_approved");
+
+                entity.Property(e => e.EmployeeVendor)
+                .HasMaxLength(36)
+                .HasColumnName("employee_vendor");
 
                 // Menambahkan hubungan satu-satu ke entitas Employee
                 entity.HasOne(d => d.EmployeeNavigation)

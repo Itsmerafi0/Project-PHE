@@ -13,7 +13,7 @@ namespace Project_PHE.Controllers
 {
     [Route("employee")]
     [ApiController]
-    [Authorize(Roles = "admin,manager")]
+    [Authorize(Roles ="admin")]
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeServices _employeeServices;

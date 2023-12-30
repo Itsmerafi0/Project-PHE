@@ -53,6 +53,42 @@ namespace Project_PHE.Services
             return getVendorDtos;
         }
 
+        public IEnumerable<GetVendorWithEmployeeDto> GetProcessVendors()
+        {
+            var vendors = _vendorRepository.GetAll().Where(vendor => vendor.IsApproved == "Process");
+
+            if (!vendors.Any()) return Enumerable.Empty<GetVendorWithEmployeeDto>();
+
+            List<GetVendorWithEmployeeDto> getVendorDtos = new();
+
+            foreach (var vendor in vendors)
+            {
+                string employeeFullName = string.Empty;
+
+                if (vendor.EmployeeVendor != null)
+                {
+                    var employee = _employeeRepository.GetByGuid(vendor.EmployeeVendor);
+                    employeeFullName = $"{employee?.Firstname} {employee?.Lastname}";
+                }
+
+                getVendorDtos.Add(new GetVendorWithEmployeeDto
+                {
+                    Guid = vendor.Guid,
+                    NameCompany = vendor.NameCompany,
+                    EmailCompany = vendor.EmailCompany,
+                    PhoneCompany = vendor.PhoneCompany,
+                    UploadImage = vendor.UploadImage,
+                    IsApproved = vendor.IsApproved,
+                    EmployeeVendor = vendor.EmployeeVendor,
+                    EmployeeName = employeeFullName
+                });
+            }
+
+            return getVendorDtos;
+        }
+
+
+
         public VendorDto GetVendorByGuid(string guid)
         {
             var vendor = _vendorRepository.GetByGuid(guid);
